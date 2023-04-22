@@ -14,7 +14,6 @@
 ### 1. Single Responsibility Principle (SRP)
 
 > ***“한 클래스는 단 하나의 책임만 가져야 한다.”***
-> 
 
 Class가 하나의 작업을 수행하고, 그 작업을 수행하기 위해 필요한 메서드와 속성만을 가지도록 해야 합니다. 다르게 말하자면, Class가 여러 책임을 갖게 되면, 한 가지 변경 사항으로 인해 다른 부분에 영향을 미칠 가능성이 있기 때문에 SRP 원칙을 준수해야 합니다. 
 
@@ -22,7 +21,7 @@ SRP를 지키는 Class는 변경 사항이 발생하더라도 영향을 받는 �
 
 아래 예시 코드를 통해 살펴 봅시다.
 
-```java
+```python
 class Rectangle:
     def __init__(self, width, height):
         self.width = width
@@ -40,7 +39,7 @@ class Rectangle:
 
 사각형의 면적을 계산하는 `get_area()` Method와 데이터베이스에 사각형을 저장하는 `save_to_database()` 메서드가 함께 있는 것을 볼 수 있습니다. 이렇게 하면 두 가지 책임을 가지고 있기 때문에 SRP를 지키지 않은 것이라고 볼 수 있습니다. 
 
-```java
+```python
 class Rectangle:
     def __init__(self, width, height):
         self.width = width
@@ -59,10 +58,27 @@ class RectangleDB:
 
 `Rectangle` Class는 사각형의 속서오가 면적을 계산하는 `get_area()` Method만을 가지고 있으며, `RectangleDB` Class는 데이터베이스에 사각형을 저장하는 책임을 가지고 있습니다. 이렇게 함으로써 각 클래스가 단 하나의 책임만을 가지게 되므로 SRP를 지키는 것입니다.
 
+이번에는 JAVA를 통해 한번 더 확인해봅시다.
+
+```java
+interface AnimalSound {
+  public void makeSound();
+}
+
+class Animal implements AnimalSound {
+  public void makeSound() {
+    System.out.println("동물 소리를 내는 중입니다.");
+  }
+}
+```
+
+`Animal` Class는 `AnimalSound` Interface의 구현체이며, 오직 동물 소리를 내는 기능만 수행합니다.
+
+만약, `Animal` Class가 다른 책임을 가지게 된다면, 예를 들어 동물의 몸무게를 계산하거나, 동물의 색상을 변경한다면, 이 Class는 단일 책임 원칙을 위반하게 됩니다. 이 경우, `Animal` Class를 다시 설계하여 새로운 클래스를 만들거나, 다른 클래스로 분리해야하는 귀찮은 일이 생길 수 있습니다.
+
 ### 2. Open-Closed Principle (OCP)
 
 > ***Software Entity(Class, Module, Function, etc.)는 확장에는 열려 있으나(open), 변경에는 닫혀 있어야 한다(close)***
-> 
 
 소프트웨어를 수정하지 않고도 새로운 동작을 추가할 수 있도록 하는 원칙입니다.
 
@@ -70,7 +86,7 @@ class RectangleDB:
 
 아래 예시 코드를 통해 살펴 봅시다.
 
-```java
+```python
 class Rectangle:
     def __init__(self, width, height):
         self.width = width
@@ -100,7 +116,7 @@ class Triangle:
 
 `Rectangle`과 `Circle` Class에 `get_area()` Method가 있지만, 새로운 모양이 추가되면 새로운 클래스를 만들어 반복되게 `get_area()` Method를 구현해야 합니다. 
 
-```java
+```python
 class Shape:
     def get_area(self):
         pass
@@ -131,14 +147,61 @@ class Triangle(Shape):
 
 그러나 두 번째 예시 코드에서는 `Shape` Class를 만들어 `get_area()` Method를 가지도록하고, 각 도형 클래스는 `Shape` Class를 상속하여 `get_area()` 메서드를 구현합니다. 
 
-이렇게 하면 새로운 모양이 추가되더라도 `Shape` Class를 상속하는 새로운 클래스를 만들어 `get_arear()` Method를 구현하면 되기 때문에, 기존의 코드를 변경할 필요가 없어 OCP를 지키게 되는 것입니다. 
+이렇게 하면 새로운 모양이 추가되더라도 `Shape` Class를 상속하는 새로운 클래스를 만들어 `get_area()` Method를 구현하면 되기 때문에, 기존의 코드를 변경할 필요가 없어 OCP를 지키게 되는 것입니다. 
 
 이처럼 OCP는 코드를 변경할 필요 없이 새로운 동작을 추가할 수 있도록 해서 `유연성`과 `확장성`을 높이고, 코드의 `재사용성`과 `유지 보수성`을 향상시킵니다. 
+
+이번에는 JAVA를 이용해서 확인해봅시다.
+
+```java
+public interface Shape {
+    double calculateArea();
+}
+
+public class Rectangle implements Shape {
+    private double width;
+    private double height;
+
+    public Rectangle(double width, double height) {
+        this.width = width;
+        this.height = height;
+    }
+
+    @Override
+    public double calculateArea() {
+        return width * height;
+    }
+}
+
+public class Circle implements Shape {
+    private double radius;
+
+    public Circle(double radius) {
+        this.radius = radius;
+    }
+
+    @Override
+    public double calculateArea() {
+        return Math.PI * radius * radius;
+    }
+}
+
+public class AreaCalculator {
+    public double calculateArea(Shape shape) {
+        return shape.calculateArea();
+    }
+}
+```
+
+위의 코드에서 `Shape` Interface는 `calculateArea()` Method를 정의합니다.
+
+`Rectangle` Class와 `Circle` Class는 `Shape` Interface를 구현하며, 각각의 `calculateArea()` Method는 각 도형의 면적을 계산합니다.
+
+`AreaCalculator` Class는 `Shape` 객체를 매개변수로 받는 `calculateArea()` Method를 정의하며, 전달된 `Shape` 객체의 면적을 계산하여 반환합니다. 이렇게 함으로써 새로운 도형을 추가할 경우에도 `AreaCalculator` Class의 코드를 수정할 필요 없이, 해당 도형이 `Shape` Interface를 구현하기만 하면 됩니다.
 
 ## 3. Liskov Substitution Principle (LSP)
 
 > ***서브 타입은 언제나 기반 타입으로 교체할 수 있어야 한다.***
-> 
 
 기반 클래스로부터 파생된 서브 클래스는 기반 클래스가 정의한 Interface를 따르고, 기반 클래스에서 가능한 작업은 서브 클래스에서도 가능해야 함을 의미합니다.
 
@@ -211,7 +274,6 @@ System.out.println(rectangle.getArea()); // 결과: 25
 ## 4. Interface Segregation Principle (ISP)
 
 > ***클라이언트가 자신이 사용하지 않는 메서드에 의존하지 않아야 한다.***
-> 
 
 클라이언트가 필요로 하지 않는 인터페이스의 메서드를 구현하지 않도록 하는 것입니다.
 
@@ -269,8 +331,7 @@ ISP를 따르면 인터페이스가 더 작고 단순해지므로, Class 간의 
 
 ## 5. Dependency Inversion Principle (DIP)
 
-> ******************************************************************************************************************************************추상화된 것은 구체적인 것에 의존하면 안된다. 구체적인 것이 추상화된 것에 의존해야 한다.******************************************************************************************************************************************
-> 
+> ***추상화된 것은 구체적인 것에 의존하면 안된다. 구체적인 것이 추상화된 것에 의존해야 한다.***
 
 높은 수준의 Module이 낮은 수준의 Module에 의존하면 안 된다는 것을 의미합니다.
 
